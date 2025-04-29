@@ -9,7 +9,9 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 
 @Component
@@ -44,19 +46,22 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if(update.hasMessage() && update.getMessage().hasText()){
+        if (update.hasCallbackQuery()) {
+            String data = update.getCallbackQuery().getData();
+            Long chatId = update.getCallbackQuery().getMessage().getChatId();
+
+            if ("botao_clicado".equals(data)) {
+                sendMessage(chatId, "Botão clicado");
+            }
+
+        } else if (update.hasMessage() && update.getMessage().hasText()) {
             String messageText = update.getMessage().getText();
             Long chatId = update.getMessage().getChatId();
 
-            if(messageText.equals("/start")){
+            if ("/start".equals(messageText)) {
                 sendWelcomeMessage(chatId);
-            } else if (update.hasCallbackQuery()) {
-                String data = update.getCallbackQuery().getData();
-                chatId = update.getCallbackQuery().getMessage().getChatId();
-
-                if("botao_clicado".equals(data)){
-                    sendMessage(chatId, "Botão clicado");
-                }
+            } else {
+                sendMessage(chatId, "Você disse: " + messageText);
             }
         }
     }
@@ -68,11 +73,38 @@ public class Bot extends TelegramLongPollingBot {
         message.setChatId(chatId);
         message.setText("Bem vindo!");
 
-        InlineKeyboardButton button = new InlineKeyboardButton("Clique aqui");
-        button.setCallbackData("botao_clicado");
+        InlineKeyboardButton team = new InlineKeyboardButton("Line up atual");
+        team.setCallbackData("team");
+
+        InlineKeyboardButton history = new InlineKeyboardButton("História do time de CS");
+        history.setCallbackData("history");
+
+        InlineKeyboardButton mainAchievements = new InlineKeyboardButton("Principais Conquistas");
+        mainAchievements.setCallbackData("mainAchievements");
+
+        InlineKeyboardButton socialMedia = new InlineKeyboardButton("Redes Sociais");
+        socialMedia.setCallbackData("socialMedia");
+
+        List<List<InlineKeyboardButton>> rowsInLine = new ArrayList<>();
+
+        List<InlineKeyboardButton> row1 = new ArrayList<>();
+        row1.add(team);
+        rowsInLine.add(row1);
+
+        List<InlineKeyboardButton> row2 = new ArrayList<>();
+        row2.add(history);
+        rowsInLine.add(row2);
+
+        List<InlineKeyboardButton> row3 = new ArrayList<>();
+        row3.add(mainAchievements);
+        rowsInLine.add(row3);
+
+        List<InlineKeyboardButton> row4 = new ArrayList<>();
+        row4.add(socialMedia);
+        rowsInLine.add(row4);
 
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
-        markup.setKeyboard(Collections.singletonList(Collections.singletonList(button)));
+        markup.setKeyboard(rowsInLine);
 
         message.setReplyMarkup(markup);
 

@@ -1,6 +1,5 @@
 package io.github.marcoant07.telegrambot.component;
 
-import org.glassfish.grizzly.nio.transport.DefaultStreamReader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -14,7 +13,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -55,7 +53,9 @@ public class Bot extends TelegramLongPollingBot {
             Long chatId = update.getCallbackQuery().getMessage().getChatId();
 
             if ("team".equals(data)) {
-                sendImageSequence(chatId);
+                sendLineUp(chatId);
+            } else if ("mainAchievements".equals(data)) {
+                sendMainAchievements(chatId);
             }
 
         } else if (update.hasMessage() && update.getMessage().hasText()) {
@@ -129,7 +129,7 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-    private void sendImageSequence(Long chatId){
+    private void sendLineUp(Long chatId){
         String[] images = {
                "FalleN.jpg",
                 "KSCERATO.jpg",
@@ -146,6 +146,46 @@ public class Bot extends TelegramLongPollingBot {
                 "Mareks \"YEKINDAR\" Gaļinskis. Letão jogador profissional de Counter-Strike 2 e ex-jogador de CS:GO. Atualmente é Stand-in.",
                 "Yuri \"yuurih\" Boian. Brasileiro jogador profissional de Counter-Strike 2 e ex-jogador de CS:GO. Joga de Rifler.",
                 "Sidnei \"sidde\" Macedo. Tecnico brasileiro profissional de Counter-Strike 2 e ex-tecnico de CS:GO."
+        };
+
+        for(int i = 0; i < images.length; i++){
+            try(InputStream is = getClass().getClassLoader().getResourceAsStream("images/" + images[i])){
+                if(is != null){
+                    InputFile photo = new InputFile(is, images[i]);
+
+                    SendPhoto sendPhoto = new SendPhoto();
+                    sendPhoto.setChatId(chatId.toString());
+                    sendPhoto.setPhoto(photo);
+                    sendPhoto.setCaption(textsForImages[i]);
+
+                    execute(sendPhoto);
+
+                    Thread.sleep(500);
+                }
+                else {
+                    System.err.println("Imagem não encontrada: " + images[i]);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        sendWelcomeMessage(chatId);
+    }
+
+    private void sendMainAchievements(Long chatId){
+
+        String[] images = {
+                "ESLProLeague.jpg",
+                "DreamHack Masters Spring North America (2020).jpg",
+                "Elisa Masters Espoo (2023).jpg",
+                "Arctic Invitational (2019).jpg"
+        };
+
+        String[] textsForImages = {
+                "FURIA venceu a equipe 100 Thieves na grande final, conquistando o título da ESL Pro League Season 12 na região da América do Norte.",
+                "FURIA derrotou a Team Liquid por 3-0 na final, garantindo o título do DreamHack Masters Spring 2020 na América do Norte.",
+                "FURIA venceu a equipe Apeks por 3-1 na final, encerrando um jejum de títulos em LANs internacionais desde 2019.",
+                "FURIA conquistou o título ao vencer a equipe CR4ZY na final do Arctic Invitational 2019, realizado em Helsinque, Finlândia."
         };
 
         for(int i = 0; i < images.length; i++){

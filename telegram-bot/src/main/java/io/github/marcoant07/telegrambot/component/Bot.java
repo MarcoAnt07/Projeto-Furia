@@ -1,14 +1,18 @@
 package io.github.marcoant07.telegrambot.component;
 
+import org.glassfish.grizzly.nio.transport.DefaultStreamReader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,8 +54,8 @@ public class Bot extends TelegramLongPollingBot {
             String data = update.getCallbackQuery().getData();
             Long chatId = update.getCallbackQuery().getMessage().getChatId();
 
-            if ("botao_clicado".equals(data)) {
-                sendMessage(chatId, "Botão clicado");
+            if ("team".equals(data)) {
+                sendImageSequence(chatId);
             }
 
         } else if (update.hasMessage() && update.getMessage().hasText()) {
@@ -59,6 +63,7 @@ public class Bot extends TelegramLongPollingBot {
             Long chatId = update.getMessage().getChatId();
 
             if ("/start".equals(messageText)) {
+                sendMessage(chatId, "Bem vindo!!");
                 sendWelcomeMessage(chatId);
             } else {
                 sendMessage(chatId, "Você disse: " + messageText);
@@ -71,7 +76,7 @@ public class Bot extends TelegramLongPollingBot {
         SendMessage message = new SendMessage();
 
         message.setChatId(chatId);
-        message.setText("Bem vindo!");
+        message.setText("Escolha uma opção abaixo:");
 
         InlineKeyboardButton team = new InlineKeyboardButton("Line up atual");
         team.setCallbackData("team");
@@ -122,6 +127,49 @@ public class Bot extends TelegramLongPollingBot {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void sendImageSequence(Long chatId){
+        String[] images = {
+               "FalleN.jpg",
+                "KSCERATO.jpg",
+                "molodoy.jpg",
+                "YEKINDAR.jpg",
+                "yuurih.jpg",
+                "sidde.jpg"
+        };
+
+        String[] textsForImages = {
+                "Gabriel \"FalleN\" Toledo. Capitão da equipe e considerado por muitos o melhor jogador do mundo de CS. Joga de Rifler.",
+                "Kaike \"KSCERATO\" Cerato. Brasileiro jogador profissional de Counter-Strike 2 e ex-jogador de CS:GO. Kauan \"KNCERATO\" irmão de Cerato e Adriano \"WOOD7\" primo de Cerato. Joga de Rifler.",
+                "Danil \"molodoy\" Golubenko. Cazaquistanês jogador profissional de Counter-Strike 2 e ex-jogador de CS:GO. Joga de AWPer.",
+                "Mareks \"YEKINDAR\" Gaļinskis. Letão jogador profissional de Counter-Strike 2 e ex-jogador de CS:GO. Atualmente é Stand-in.",
+                "Yuri \"yuurih\" Boian. Brasileiro jogador profissional de Counter-Strike 2 e ex-jogador de CS:GO. Joga de Rifler.",
+                "Sidnei \"sidde\" Macedo. Tecnico brasileiro profissional de Counter-Strike 2 e ex-tecnico de CS:GO."
+        };
+
+        for(int i = 0; i < images.length; i++){
+            try(InputStream is = getClass().getClassLoader().getResourceAsStream("images/" + images[i])){
+                if(is != null){
+                    InputFile photo = new InputFile(is, images[i]);
+
+                    SendPhoto sendPhoto = new SendPhoto();
+                    sendPhoto.setChatId(chatId.toString());
+                    sendPhoto.setPhoto(photo);
+                    sendPhoto.setCaption(textsForImages[i]);
+
+                    execute(sendPhoto);
+
+                    Thread.sleep(500);
+                }
+                else {
+                    System.err.println("Imagem não encontrada: " + images[i]);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        sendWelcomeMessage(chatId);
     }
 
     @Override

@@ -56,6 +56,8 @@ public class Bot extends TelegramLongPollingBot {
                 sendLineUp(chatId);
             } else if ("mainAchievements".equals(data)) {
                 sendMainAchievements(chatId);
+            } else if ("socialMedia".equals(data)) {
+                sendSocialMedia(chatId);
             }
 
         } else if (update.hasMessage() && update.getMessage().hasText()) {
@@ -209,6 +211,23 @@ public class Bot extends TelegramLongPollingBot {
                 e.printStackTrace();
             }
         }
+        sendWelcomeMessage(chatId);
+    }
+
+    private void sendSocialMedia(Long chatId){
+
+        String[] linksSocialMedias = {
+                "Instagram: instagram.com/furiagg",
+                "X: x.com/FURIA",
+                "Tik Tok: tiktok.com/@furiagg",
+                "YouTube: youtube.com/@FURIAgg",
+                "Twitch: twitch.tv/team/furia"
+        };
+
+        for(int i = 0; i < linksSocialMedias.length; i++){
+            sendMessage(chatId, linksSocialMedias[i]);
+        }
+
         sendWelcomeMessage(chatId);
     }
 

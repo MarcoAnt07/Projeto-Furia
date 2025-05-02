@@ -58,6 +58,8 @@ public class Bot extends TelegramLongPollingBot {
                 sendMainAchievements(chatId);
             } else if ("socialMedia".equals(data)) {
                 sendSocialMedia(chatId);
+            } else if ("history".equals(data)) {
+                sendHistory(chatId);
             }
 
         } else if (update.hasMessage() && update.getMessage().hasText()) {
@@ -124,6 +126,7 @@ public class Bot extends TelegramLongPollingBot {
 
     private void sendMessage(Long chatId, String text) {
         SendMessage message = new SendMessage(chatId.toString(), text);
+        message.setParseMode("HTML");
         try {
             execute(message);
         } catch (Exception e) {
@@ -178,9 +181,9 @@ public class Bot extends TelegramLongPollingBot {
 
         String[] images = {
                 "ESLProLeague.jpg",
-                "DreamHack Masters Spring North America (2020).jpg",
-                "Elisa Masters Espoo (2023).jpg",
-                "Arctic Invitational (2019).jpg"
+                "DreamHackMastersSpringNorthAmerica2020.jpg",
+                "ElisaMastersEspoo2023.jpg",
+                "ArcticInvitational2019.jpg"
         };
 
         String[] textsForImages = {
@@ -226,6 +229,65 @@ public class Bot extends TelegramLongPollingBot {
 
         for(int i = 0; i < linksSocialMedias.length; i++){
             sendMessage(chatId, linksSocialMedias[i]);
+        }
+
+        sendWelcomeMessage(chatId);
+    }
+
+    private void sendHistory(Long chatId){
+
+        String[] historyDividedByEpochs = {
+            "A FURIA foi fundada em 2017 como uma organização de eSports brasileira, com foco em desenvolver talentos locais.\nA line-up de CS:GO começou a ganhar destaque com a contratação de KSCERATO e yuurih, dois dos jogadores mais constantes da organização até hoje.",
+                "A FURIA entrou no cenário competitivo de Counter-Strike: Global Offensive ainda em 2017, mas só começou a ganhar destaque internacional em 2019, quando foi vice-campeã da DreamHack Open Rio e campeã do Arctic Invitational.\nCom um time jovem e promissor, a equipe ficou conhecida pelo estilo agressivo e criativo de jogo, liderado por jogadores como yuurih, KSCERATO e arT.",
+                "Em 2020, durante a pandemia, a FURIA se destacou na região da América do Norte, vencendo torneios como: ESL Pro League Season 12: North America e DreamHack Masters Spring NA\nA equipe chegou ao Top 3 no ranking mundial da HLTV, algo raro para times sul-americanos.",
+                "A FURIA chegou à semifinal do IEM Rio Major, o primeiro Major de CS no Brasil.\nJogando com o apoio massivo da torcida, a campanha foi histórica e consolidou a equipe como a maior representante brasileira no CS naquele momento.",
+                "Além do CS:GO/CS2, a FURIA expandiu para outras modalidades: League of Legends (LoL), VALORANT, Apex Legends, Chess (Xadrez), com o GM Krikor Mekhitarian, FIFA, além também da Kings League.",
+                "A FURIA conta com centros de treinamento nos EUA e no Brasil, além de iniciativas como a FURIA Academy, voltada à formação de novos talentos.",
+                "A organização é reconhecida por seu marketing ousado, visual marcante (com a pantera negra) e por buscar impacto além do servidor, com foco em educação, performance e mentalidade vencedora."
+        };
+
+        String[] epochs = {
+                "<b>Fundação</b>",
+                "<b>Início no CS:GO</b>",
+                "<b>Internacionalização</b>",
+                "<b>Momento Histórico: IEM Rio Major (2022)</b>",
+                "<b>Outras Modalidades</b>",
+                "<b>Infraestrutura</b>",
+                "<b>Identidade</b>"
+        };
+
+        String[] images = {
+                "FundacaoFuria.jpg",
+                "PrimeiraLineUp.jpg",
+                "Top3HLTV.jpg",
+                "IEMRioMajor2022.jpg",
+                "FuriaKingsLeague.jpg",
+                "InfraFuria.jpg",
+                "LogoFuria.png"
+        };
+
+        for(int i = 0; i < images.length; i++){
+            try(InputStream is = getClass().getClassLoader().getResourceAsStream("images/" + images[i])){
+                if(is != null){
+                    sendMessage(chatId, epochs[i]);
+
+                    InputFile photo = new InputFile(is, images[i]);
+
+                    SendPhoto sendPhoto = new SendPhoto();
+                    sendPhoto.setChatId(chatId.toString());
+                    sendPhoto.setPhoto(photo);
+                    sendPhoto.setCaption(historyDividedByEpochs[i]);
+
+                    execute(sendPhoto);
+
+                    Thread.sleep(500);
+                }
+                else {
+                    System.err.println("Imagem não encontrada: " + images[i]);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         sendWelcomeMessage(chatId);

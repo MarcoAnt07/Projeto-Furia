@@ -230,16 +230,42 @@ public class Bot extends TelegramLongPollingBot {
 
     private void sendSocialMedia(Long chatId){
 
-        String[] linksSocialMedias = {
-                "Instagram: instagram.com/furiagg",
-                "X: x.com/FURIA",
-                "Tik Tok: tiktok.com/@furiagg",
-                "YouTube: youtube.com/@FURIAgg",
-                "Twitch: twitch.tv/team/furia"
-        };
+        SendMessage message = new SendMessage();
 
-        for(int i = 0; i < linksSocialMedias.length; i++){
-            sendMessage(chatId, linksSocialMedias[i]);
+        message.setChatId(chatId);
+        message.setText("Escolha a rede social que deseja acessar:");
+
+        InlineKeyboardButton instagram = new InlineKeyboardButton("Instagram");
+        instagram.setUrl("https://instagram.com/furiagg");
+
+        InlineKeyboardButton twitter = new InlineKeyboardButton("X (Twitter)");
+        twitter.setUrl("https://x.com/FURIA");
+
+        InlineKeyboardButton tiktok = new InlineKeyboardButton("TikTok");
+        tiktok.setUrl("https://tiktok.com/@furiagg");
+
+        InlineKeyboardButton youtube = new InlineKeyboardButton("YouTube");
+        youtube.setUrl("https://youtube.com/@FURIAgg");
+
+        InlineKeyboardButton twitch = new InlineKeyboardButton("Twitch");
+        twitch.setUrl("https://twitch.tv/team/furia");
+
+        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+        rows.add(List.of(instagram));
+        rows.add(List.of(twitter));
+        rows.add(List.of(tiktok));
+        rows.add(List.of(youtube));
+        rows.add(List.of(twitch));
+
+        InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
+        markup.setKeyboard(rows);
+
+        message.setReplyMarkup(markup);
+
+        try {
+            execute(message);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         sendWelcomeMessage(chatId);

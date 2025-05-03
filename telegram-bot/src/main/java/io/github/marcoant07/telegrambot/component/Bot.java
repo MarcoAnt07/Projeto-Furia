@@ -60,6 +60,10 @@ public class Bot extends TelegramLongPollingBot {
                 sendSocialMedia(chatId);
             } else if ("history".equals(data)) {
                 sendHistory(chatId);
+            } else if ("cheerleadingSimulator".equals(data)) {
+                sendCheerleadingSimulator(chatId);
+            } else if (data.startsWith("fanChant")) {
+                handleCheer(chatId, data);
             }
 
         } else if (update.hasMessage() && update.getMessage().hasText()) {
@@ -95,7 +99,7 @@ public class Bot extends TelegramLongPollingBot {
         socialMedia.setCallbackData("socialMedia");
 
         InlineKeyboardButton cheerleadingSimulator = new InlineKeyboardButton("Simulador de Torcida");
-        socialMedia.setCallbackData("cheerleadingSimulator");
+        cheerleadingSimulator.setCallbackData("cheerleadingSimulator");
 
         List<List<InlineKeyboardButton>> rowsInLine = new ArrayList<>();
 
@@ -298,6 +302,73 @@ public class Bot extends TelegramLongPollingBot {
         }
 
         sendWelcomeMessage(chatId);
+    }
+
+    private void sendCheerleadingSimulator(Long chatId){
+
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId.toString());
+        message.setText("Bem vindo a torcida da FURIA!! Vamos torcer juntos!!\nEscolha seu grito de torcida:");
+
+        InlineKeyboardButton fanChant1 = new InlineKeyboardButton("\uD83D\uDC4F\uD83D\uDC4F UH! É FURIA! \uD83D\uDC4F\uD83D\uDC4F");
+        fanChant1.setCallbackData("fanChant1");
+
+        InlineKeyboardButton fanChant2 = new InlineKeyboardButton("VAMO FURIA! ⚔\uFE0F\uD83C\uDDE7\uD83C\uDDF7\uD83D\uDE80");
+        fanChant2.setCallbackData("fanChant2");
+
+        InlineKeyboardButton fanChant3 = new InlineKeyboardButton("AQUI É BRASIL! \uD83D\uDC9A\uD83C\uDDE7\uD83C\uDDF7\uD83D\uDC9B");
+        fanChant3.setCallbackData("fanChant3");
+
+        InlineKeyboardButton fanChant4 = new InlineKeyboardButton("PAN-TE-RA! PAN-TE-RA! \uD83D\uDC06\uD83D\uDD25\uD83D\uDDA4");
+        fanChant4.setCallbackData("fanChant4");
+
+        InlineKeyboardButton fanChant5 = new InlineKeyboardButton("FURIA, FURIA, FURIA! \uD83D\uDD0A\uD83D\uDCA3\uD83D\uDC3E");
+        fanChant5.setCallbackData("fanChant5");
+
+        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+
+        rows.add(List.of(fanChant1));
+        rows.add(List.of(fanChant2));
+        rows.add(List.of(fanChant3));
+        rows.add(List.of(fanChant4));
+        rows.add(List.of(fanChant5));
+
+        InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
+        markup.setKeyboard(rows);
+
+        message.setReplyMarkup(markup);
+
+        try {
+            execute(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleCheer(Long chatId, String action){
+        switch (action){
+            case "fanChant1":
+                sendMessage(chatId, "\uD83D\uDC4F\uD83D\uDC4F UH! É FURIA! \uD83D\uDC4F\uD83D\uDC4F");
+                break;
+
+            case "fanChant2":
+                sendMessage(chatId, "VAMO FURIA! ⚔\uFE0F\uD83C\uDDE7\uD83C\uDDF7\uD83D\uDE80");
+                break;
+
+            case "fanChant3":
+                sendMessage(chatId, "AQUI É BRASIL! \uD83D\uDC9A\uD83C\uDDE7\uD83C\uDDF7\uD83D\uDC9B");
+                break;
+
+            case "fanChant4":
+                sendMessage(chatId, "PAN-TE-RA! PAN-TE-RA! \uD83D\uDC06\uD83D\uDD25\uD83D\uDDA4");
+                break;
+
+            case "fanChant5":
+                sendMessage(chatId, "FURIA, FURIA, FURIA! \uD83D\uDD0A\uD83D\uDCA3\uD83D\uDC3E");
+                break;
+        }
+
+        sendCheerleadingSimulator(chatId);
     }
 
     @Override

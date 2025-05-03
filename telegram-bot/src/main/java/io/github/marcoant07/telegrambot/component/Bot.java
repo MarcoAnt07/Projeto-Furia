@@ -94,6 +94,9 @@ public class Bot extends TelegramLongPollingBot {
         InlineKeyboardButton socialMedia = new InlineKeyboardButton("Redes Sociais");
         socialMedia.setCallbackData("socialMedia");
 
+        InlineKeyboardButton cheerleadingSimulator = new InlineKeyboardButton("Simulador de Torcida");
+        socialMedia.setCallbackData("cheerleadingSimulator");
+
         List<List<InlineKeyboardButton>> rowsInLine = new ArrayList<>();
 
         List<InlineKeyboardButton> row1 = new ArrayList<>();
@@ -111,6 +114,10 @@ public class Bot extends TelegramLongPollingBot {
         List<InlineKeyboardButton> row4 = new ArrayList<>();
         row4.add(socialMedia);
         rowsInLine.add(row4);
+
+        List<InlineKeyboardButton> row5 = new ArrayList<>();
+        row5.add(cheerleadingSimulator);
+        rowsInLine.add(row5);
 
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
         markup.setKeyboard(rowsInLine);

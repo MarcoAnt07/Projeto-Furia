@@ -1,10 +1,10 @@
 # 🤖 FURIA CS Fan Bot - Experiência Conversacional
 
-Este é um projeto de bot desenvolvido em Java (JDK 17) com Spring Boot e a [Telegram Bot API](https://core.telegram.org/bots/api), voltado para fãs do time de CS da FURIA. O bot oferece uma experiência interativa e imersiva, com funcionalidades que permitem explorar a história, line-up, conquistas, redes sociais e até simular a torcida pelo time.
+Este é um projeto de bot desenvolvido em Java (JDK 21) com Spring Boot e a [Telegram Bot API](https://core.telegram.org/bots/api), voltado para fãs do time de CS da FURIA. O bot oferece uma experiência interativa e imersiva, com funcionalidades que permitem explorar a história, line-up, conquistas, redes sociais e até simular a torcida pelo time.
 
 ## ⚙️ Tecnologias Utilizadas
 
-- Java 17
+- Java 21
 - Spring Boot
 - TelegramBots
 - Telegram Bot API
@@ -67,7 +67,7 @@ src/
 └── main/
     ├── java/
     │   └── io.github.marcoant07.telegrambot.component/
-    │       └── Bot.java         # Classe principal do bot
+    │       └── Bot.java         # Classe do bot (usada pelo Spring)
     └── resources/
         └── images/              # Imagens utilizadas nas mensagens (jogadores, conquistas, etc.)
 ```
@@ -81,6 +81,8 @@ telegrambots.botToken=SEU_TOKEN_DO_BOT
 telegrambots.botUsername=SEU_NOME_DE_USUARIO_DO_BOT
 ```
 
+> ✅ *Se o projeto já estiver configurado com credenciais válidas, **não é necessário alterá-las** para rodar o bot.*
+
 ## 🧠 Lógica de Funcionamento
 
 - A classe `Bot` estende `TelegramLongPollingBot` e é anotada com `@Component`, integrando-se ao Spring Boot.
@@ -93,6 +95,33 @@ telegrambots.botUsername=SEU_NOME_DE_USUARIO_DO_BOT
 
 - Exceções da API do Telegram são capturadas com `try-catch` em todas as chamadas de `execute()`.
 - Caso uma imagem não seja encontrada no classpath, uma mensagem de erro é exibida no console.
+
+## ▶️ Como Rodar o Projeto
+
+1. **Clone o repositório:**
+
+   ```bash
+   git clone https://github.com/seuusuario/furia-cs-fan-bot.git
+   cd furia-cs-fan-bot
+   ```
+
+2. **Abra o projeto no IntelliJ IDEA.**
+
+3. **(Opcional)**: Configure o arquivo `application.properties` com seu token e nome de usuário:
+
+   ```
+   src/main/resources/application.properties
+   ```
+
+4. **Execute a classe `TelegramBotApplication` no IntelliJ para iniciar o bot.**
+
+   Ou, se preferir via terminal:
+
+   ```bash
+   ./mvnw spring-boot:run
+   ```
+
+5. **Acesse seu bot pelo Telegram e envie o comando `/start` para interagir.**
 
 ## 🧪 Possíveis Melhorias Futuras
 

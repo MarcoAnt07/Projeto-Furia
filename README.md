@@ -102,7 +102,7 @@ telegrambots.botUsername=SEU_NOME_DE_USUARIO_DO_BOT
 
    ```bash
    git clone https://github.com/MarcoAnt07/Projeto-Furia.git
-   cd furia-cs-fan-bot
+   cd Projeto-Furia-main
    ```
 
 2. **Abra o projeto no IntelliJ IDEA.**

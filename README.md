@@ -1,6 +1,6 @@
-# 🤖 FURIA CS Fan Bot - Experiência Conversacional
+# 🤖 FURIA CS Fan Chat - Experiência Conversacional
 
-Este é um projeto de bot desenvolvido em Java (JDK 21) com Spring Boot e a [Telegram Bot API](https://core.telegram.org/bots/api), voltado para fãs do time de CS da FURIA. O bot oferece uma experiência interativa e imersiva, com funcionalidades que permitem explorar a história, line-up, conquistas, redes sociais e até simular a torcida pelo time.
+Este é um projeto de chat desenvolvido em Java (JDK 21) com Spring Boot e a [Telegram Bot API](https://core.telegram.org/bots/api), voltado para fãs do time de CS da FURIA. O bot oferece uma experiência interativa e imersiva, com funcionalidades que permitem explorar a história, line-up, conquistas, redes sociais e até simular a torcida pelo time.
 
 ## ⚙️ Tecnologias Utilizadas
 
@@ -13,7 +13,7 @@ Este é um projeto de bot desenvolvido em Java (JDK 21) com Spring Boot e a [Tel
 ## 🚀 Funcionalidades do Bot
 
 ### 📜 Comando `/start`
-Ao iniciar uma conversa com o bot, o usuário recebe uma saudação e um **menu principal interativo**, com botões para explorar as seguintes funcionalidades:
+Ao iniciar uma conversa com o chat, o usuário recebe uma saudação e um **menu principal interativo**, com botões para explorar as seguintes funcionalidades:
 
 ### 1. 📋 **Line-up Atual**
 - Exibe as imagens e descrições dos jogadores e do técnico atual da equipe de CS da FURIA.
@@ -101,7 +101,7 @@ telegrambots.botUsername=SEU_NOME_DE_USUARIO_DO_BOT
 1. **Clone o repositório:**
 
    ```bash
-   git clone https://github.com/seuusuario/furia-cs-fan-bot.git
+   git clone https://github.com/MarcoAnt07/Projeto-Furia.git
    cd furia-cs-fan-bot
    ```
 

@@ -64,6 +64,8 @@ public class Bot extends TelegramLongPollingBot {
                 sendCheerleadingSimulator(chatId);
             } else if (data.startsWith("fanChant")) {
                 handleCheer(chatId, data);
+            } else if ("mainMenu".equals(data)) {
+                sendWelcomeMessage(chatId);
             }
 
         } else if (update.hasMessage() && update.getMessage().hasText()) {
@@ -74,7 +76,7 @@ public class Bot extends TelegramLongPollingBot {
                 sendMessage(chatId, "Bem vindo!!");
                 sendWelcomeMessage(chatId);
             } else {
-                sendMessage(chatId, "Você disse: " + messageText);
+                sendInvalidCommandMessage(chatId);
             }
         }
     }
@@ -250,12 +252,16 @@ public class Bot extends TelegramLongPollingBot {
         InlineKeyboardButton twitch = new InlineKeyboardButton("Twitch");
         twitch.setUrl("https://twitch.tv/team/furia");
 
+        InlineKeyboardButton mainMenu = new InlineKeyboardButton("Voltar ao Menu Principal");
+        mainMenu.setCallbackData("mainMenu");
+
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
         rows.add(List.of(instagram));
         rows.add(List.of(twitter));
         rows.add(List.of(tiktok));
         rows.add(List.of(youtube));
         rows.add(List.of(twitch));
+        rows.add(List.of(mainMenu));
 
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
         markup.setKeyboard(rows);
@@ -267,8 +273,6 @@ public class Bot extends TelegramLongPollingBot {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        sendWelcomeMessage(chatId);
     }
 
     private void sendHistory(Long chatId){
@@ -351,6 +355,9 @@ public class Bot extends TelegramLongPollingBot {
         InlineKeyboardButton fanChant5 = new InlineKeyboardButton("FURIA, FURIA, FURIA! \uD83D\uDD0A\uD83D\uDCA3\uD83D\uDC3E");
         fanChant5.setCallbackData("fanChant5");
 
+        InlineKeyboardButton mainMenu = new InlineKeyboardButton("Voltar ao Menu Principal");
+        mainMenu.setCallbackData("mainMenu");
+
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
 
         rows.add(List.of(fanChant1));
@@ -358,6 +365,7 @@ public class Bot extends TelegramLongPollingBot {
         rows.add(List.of(fanChant3));
         rows.add(List.of(fanChant4));
         rows.add(List.of(fanChant5));
+        rows.add(List.of(mainMenu));
 
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
         markup.setKeyboard(rows);
@@ -396,6 +404,29 @@ public class Bot extends TelegramLongPollingBot {
 
         sendCheerleadingSimulator(chatId);
     }
+
+    private void sendInvalidCommandMessage(Long chatId) {
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId.toString());
+        message.setText("Comando inválido. Deseja voltar ao menu principal?");
+
+        InlineKeyboardButton mainMenuButton = new InlineKeyboardButton("Menu Principal");
+        mainMenuButton.setCallbackData("mainMenu");
+
+        InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
+        List<InlineKeyboardButton> row = new ArrayList<>();
+        row.add(mainMenuButton);
+        markup.setKeyboard(List.of(row));
+
+        message.setReplyMarkup(markup);
+
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public String getBotUsername() {
